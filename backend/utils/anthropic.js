@@ -1,48 +1,67 @@
-const Anthropic = require("@anthropic-ai/sdk");
-
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 /**
- * Call Claude with a system prompt + user message.
- * Returns the raw text response.
+ * utils/anthropic.js — EDITED
+ * Path: backend/utils/anthropic.js
+ *
+ * Uses OpenRouter API instead of direct Anthropic SDK
+ * OpenRouter key starts with sk-or-v1-...
+ * Docs: openrouter.ai/docs
  */
-async function callClaude(systemPrompt, userMessage, maxTokens = 1200) {
-  const response = await client.messages.create({
-    model: "claude-opus-4-6",
-    max_tokens: maxTokens,
-    system: systemPrompt,
-    messages: [{ role: "user", content: userMessage }],
+
+const OPENROUTER_API = 'https://openrouter.ai/api/v1/chat/completions';
+const MODEL = 'anthropic/claude-opus-4';  // Claude via OpenRouter
+
+async function callOpenRouter(systemPrompt, messages, maxTokens = 1200) {
+  const res = await fetch(OPENROUTER_API, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.ANTHROPIC_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'http://localhost:3001',
+      'X-Title': 'AI Gurukul',
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: maxTokens,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...messages,
+      ],
+    }),
   });
-  return response.content[0].text;
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || `OpenRouter error: ${res.status}`);
+  }
+
+  const data = await res.json();
+  return data.choices[0].message.content;
 }
 
-/**
- * Call Claude and parse the response as JSON.
- * Strips markdown fences if present.
- */
+/* ── callClaude — same interface as before ── */
+async function callClaude(systemPrompt, userMessage, maxTokens = 1200) {
+  return callOpenRouter(
+    systemPrompt,
+    [{ role: 'user', content: userMessage }],
+    maxTokens
+  );
+}
+
+/* ── callClaudeJSON — parses response as JSON ── */
 async function callClaudeJSON(systemPrompt, userMessage, maxTokens = 1200) {
   const raw = await callClaude(systemPrompt, userMessage, maxTokens);
-  const cleaned = raw.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim();
+  const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
   try {
     return JSON.parse(cleaned);
   } catch (err) {
-    console.error("[Claude JSON parse error]", cleaned.slice(0, 200));
-    throw new Error("Claude returned invalid JSON. Please retry.");
+    console.error('[OpenRouter JSON parse error]', cleaned.slice(0, 200));
+    throw new Error('Claude returned invalid JSON. Please retry.');
   }
 }
 
-/**
- * Call Claude with multi-turn conversation history.
- * messages = [{ role: 'user'|'assistant', content: string }]
- */
+/* ── callClaudeChat — multi-turn conversation ── */
 async function callClaudeChat(systemPrompt, messages, maxTokens = 400) {
-  const response = await client.messages.create({
-    model: "claude-opus-4-6",
-    max_tokens: maxTokens,
-    system: systemPrompt,
-    messages,
-  });
-  return response.content[0].text;
+  return callOpenRouter(systemPrompt, messages, maxTokens);
 }
 
 module.exports = { callClaude, callClaudeJSON, callClaudeChat };
