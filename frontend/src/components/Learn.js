@@ -103,6 +103,7 @@ function injectLearnStyles() {
 @keyframes lFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes lFadeIn{from{opacity:0}to{opacity:1}}
 
+
 /* ── YouTube tab styles ── */
 .gita-progress-wrapper{display:flex;justify-content:center;margin-top:20px;margin-bottom:30px;position:relative;z-index:1}
 .gita-progress-box{max-width:750px;width:100%;margin:0 auto;padding:20px 16px;box-sizing:border-box;text-align:center;background:rgba(255,255,255,0.03);border-radius:12px}
@@ -138,6 +139,7 @@ function injectLearnStyles() {
 .yt-watch-btn{background:none;border:1px solid var(--gold-border);color:var(--text-muted);border-radius:20px;padding:5px 14px;font-size:11px;font-family:'Lato',sans-serif;cursor:pointer;transition:all .2s}
 .yt-watch-btn:hover{border-color:var(--green);color:var(--green)}
 .yt-watch-btn.watched{border-color:var(--green);color:var(--green);background:rgba(58,155,140,.1)}
+
   `;
   document.head.appendChild(s);
 }
@@ -233,7 +235,7 @@ function buildSkeleton() {
         <button class="l-tab" data-t="panchatantra">🐘 Panchatantra</button>
         <button class="l-tab" data-t="ayurveda">🌿 Ayurveda</button>
         <button class="l-tab" data-t="arthashastra">⚖️ Arthashastra</button>
-        <button class="l-tab" data-t="youtube">▶ YouTube Videos</button>
+<button class="l-tab" data-t="youtube">▶ YouTube Videos</button>
       </div>
 
       <div class="l-panel active" id="l-p-gita">
@@ -300,63 +302,48 @@ function buildSkeleton() {
         <span class="l-sec-lbl">15 Books (Adhikaranas) — click Read Sutra for Chanakya's exact words</span>
         <div class="l-grid" id="l-artha-grid"></div>
       </div>
+<!-- ══ YOUTUBE PANEL ══ -->
+<div class="l-panel" id="l-p-youtube">
+  <div class="l-topic-hdr" style="text-align:center">
+    <div class="l-eyebrow">Saregama Bhakti Channel</div>
+    <div class="l-tname">Bhagavad Gita Videos</div>
+    <div class="l-tdesc" style="margin:0 auto">
+      Watch Adhyay-wise videos · Track your viewing progress chapter by chapter
+    </div>
+  </div>
 
-      <!-- ══ YOUTUBE PANEL ══ -->
-      <div class="l-panel" id="l-p-youtube">
-        <div class="l-topic-hdr" style="text-align:center">
-          <div class="l-eyebrow">Saregama Bhakti Channel</div>
-          <div class="l-tname">Bhagavad Gita Videos</div>
-          <div class="l-tdesc" style="margin:0 auto">Watch Adhyay-wise videos · Track your viewing progress chapter by chapter</div>
-        </div>
-
-        <!-- Progress block -->
-        <div class="gita-progress-wrapper">
-          <div class="gita-progress-box">
-            <div class="yt-prog">
-              <div id="yt-prog-val">0 / 18 chapters</div>
-              <div class="yt-prog-bar">
-                <div class="yt-prog-fill" id="yt-prog-fill" style="width:0%"></div>
-              </div>
-            </div>
-            <div id="yt-ch-pills" class="yt-ch-pills"></div>
-          </div>
-        </div>
-
-        <!-- Selector -->
-        <div class="yt-selector-wrap">
-          <div class="yt-sel-row">
-            <span class="yt-sel-lbl">Select Adhyay</span>
-            <select class="yt-select" id="yt-adhyay-sel">
-              <option value="">Choose Adhyay to watch...</option>
-              <option value="1">Adhyay 1 — Arjuna Vishada Yoga</option>
-              <option value="2">Adhyay 2 — Sankhya Yoga</option>
-              <option value="3">Adhyay 3 — Karma Yoga</option>
-              <option value="4">Adhyay 4 — Jnana Karma Sanyasa Yoga</option>
-              <option value="5">Adhyay 5 — Karma Sanyasa Yoga</option>
-              <option value="6">Adhyay 6 — Atma Sanyam Yoga</option>
-              <option value="7">Adhyay 7 — Jnana Vijnana Yoga</option>
-              <option value="8">Adhyay 8 — Aksara Brahma Yoga</option>
-              <option value="9">Adhyay 9 — Raja Vidya Yoga</option>
-              <option value="10">Adhyay 10 — Vibhuti Yoga</option>
-              <option value="11">Adhyay 11 — Vishwarupa Darshana Yoga</option>
-              <option value="12">Adhyay 12 — Bhakti Yoga</option>
-              <option value="13">Adhyay 13 — Kshetra Kshetragyna Yoga</option>
-              <option value="14">Adhyay 14 — Gunatraya Vibhaga Yoga</option>
-              <option value="15">Adhyay 15 — Purushottama Yoga</option>
-              <option value="16">Adhyay 16 — Daiva Asura Sampad Yoga</option>
-              <option value="17">Adhyay 17 — Shraddhatraya Vibhaga Yoga</option>
-              <option value="18">Adhyay 18 — Moksha Sanyasa Yoga</option>
-            </select>
-            <button class="yt-load-btn" id="yt-load-btn">Load Videos</button>
-          </div>
-        </div>
-
-        <!-- Video results -->
-        <div class="yt-videos-section" id="yt-videos-section" style="display:none">
-          <div class="yt-videos-title" id="yt-videos-title"></div>
-          <div id="yt-video-list"></div>
+  <!-- Progress block -->
+  <div class="gita-progress-wrapper">
+    <div class="gita-progress-box">
+      <div class="yt-prog">
+        <div id="yt-prog-val">0 / 18 chapters</div>
+        <div class="yt-prog-bar">
+          <div class="yt-prog-fill" id="yt-prog-fill" style="width:0%"></div>
         </div>
       </div>
+      <div id="yt-ch-pills" class="yt-ch-pills"></div>
+    </div>
+  </div>
+
+  <!-- Selector -->
+  <div class="yt-selector-wrap">
+    <div class="yt-sel-row">
+      <span class="yt-sel-lbl">Select Adhyay</span>
+      <select class="yt-select" id="yt-adhyay-sel">
+        <option value="">Choose Adhyay to watch...</option>
+        <!-- options same as your code -->
+      </select>
+      <button class="yt-load-btn" id="yt-load-btn">Load Videos</button>
+    </div>
+  </div>
+
+  <!-- Video results -->
+  <div class="yt-videos-section" id="yt-videos-section" style="display:none">
+    <div class="yt-videos-title" id="yt-videos-title"></div>
+    <div id="yt-video-list"></div>
+  </div>
+</div>
+
     </div>
 
     <div id="l-detail">
@@ -626,18 +613,25 @@ function attachEvents() {
   _c.addEventListener('click', e => {
     const el = e.target;
 
-    if (el.classList.contains('l-tab')) {
-      showTopic(el.dataset.t);
-      return;
-    }
-    if (el.classList.contains('l-rm-btn')) {
-      openDetail(el.dataset.topic, parseInt(el.dataset.idx));
-      return;
-    }
+
+  // Tab switch
+if (el.classList.contains('l-tab')) {
+  showTopic(el.dataset.t);
+  return;
+}
+
+// Read More / Full Guide / Read Sutra
+if (el.classList.contains('l-rm-btn')) {
+  openDetail(el.dataset.topic, parseInt(el.dataset.idx));
+  return;
+}
+
+// Back button
     if (el.id === 'l-back') {
       if (typeof _onBack === 'function') _onBack();
       return;
     }
+
     if (el.id === 'l-close') {
       closeDetail();
       return;
@@ -918,9 +912,10 @@ export function renderLearn(container, onBack) {
     buildSkeleton();
     buildCards();
     attachEvents();
-    buildYTPills();
-    attachYTEvents();
-    updateProgressUI();
+buildYTPills();
+attachYTEvents();
+updateProgressUI();
+}
   }
 
   // Always reset to cards view when screen becomes active
